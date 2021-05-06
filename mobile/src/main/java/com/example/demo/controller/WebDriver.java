@@ -32,8 +32,8 @@ class Businfo{
 public class WebDriver { 
 	private FirefoxDriver driver;
 	public static String WEB_DRIVER_ID = "webdriver.gecko.driver";
-	//public static String WEB_DRIVER_PATH = "/home/yunsik/Downloads/geckodriver"; 
-	public static String WEB_DRIVER_PATH = "/Users/강윤식/Desktop/geckodriver.exe";
+	public static String WEB_DRIVER_PATH = "/home/yunsik/Downloads/geckodriver"; 
+//	public static String WEB_DRIVER_PATH = "/Users/강윤식/Desktop/geckodriver.exe";
 	
 	final static double start_x = 37.47708963, start_y = 126.9635058;
     final static double end_x = 37.62383376, end_y = 127.0616906;

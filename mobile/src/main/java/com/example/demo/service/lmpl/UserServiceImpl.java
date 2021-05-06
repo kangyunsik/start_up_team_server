@@ -26,4 +26,9 @@ public class UserServiceImpl implements UserService{
 		return user;
 	}
 
+	@Override
+	public void updateUserLocation(double x,double y,String id) {
+		dao.updateLocation(x,y,id);
+		return;
+	}
 }

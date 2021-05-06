@@ -6,22 +6,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserModel {
-	private String ident;
-	private String hashed_pw;
-	private double longitude;
+	private String id;
+	private String password;
 	private double latitude;
+	private double longitude;
 	
 	public UserModel(String id, String pw) {
-		this.ident = id;
-		this.hashed_pw = pw;
+		this.setId(id);
+		this.setPassword(pw);
 	}
 	
-	public String getIdent() {
-		return ident;
-	}
-	public void setIdent(String ident) {
-		this.ident = ident;
-	}
 	
 	public double getLongitude() {
 		return longitude;
@@ -36,12 +30,25 @@ public class UserModel {
 		this.latitude = latitude;
 	}
 
-	public String getHashed_pw() {
-		return hashed_pw;
+
+	public String getId() {
+		return id;
 	}
 
-	public void setHashed_pw(String hashed_pw) {
-		this.hashed_pw = hashed_pw;
+
+	public void setId(String id) {
+		this.id = id;
 	}
+
+
+	public String getPassword() {
+		return password;
+	}
+
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	
 }

@@ -6,13 +6,19 @@
 
 	<select id="getUser"
 		resultType="com.example.demo.model.UserModel">
-		select ident,longitude,latitude from users
+		select id,longitude,latitude from user
 	</select>
 
 	<select id="targetUser"
 		resultType="com.example.demo.model.UserModel">
-		SELECT * FROM users WHERE ident = #{_id} and hashed_pw = #{_pw}
-
+		SELECT * FROM user WHERE id = #{_id} and password = #{_pw}
 	</select>
+	
+	<update id="updateLocation">
+		UPDATE	user
+		SET		latitude = #{_x},
+				longitude = #{_y}
+		WHERE	id = #{_id}
+	</update>
 
 </mapper>

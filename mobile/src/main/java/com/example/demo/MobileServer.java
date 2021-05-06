@@ -25,19 +25,22 @@ public class MobileServer {
 		SpringApplication.run(MobileServer.class, args);
 	}
 
-	
-	  @Bean public WebDriver webDriver() { return new WebDriver(); }
-	 
+	@Bean
+	public WebDriver webDriver() {
+		return new WebDriver();
+	}
 
-	
-	  @Bean public HttpMessageConverter<String> responseBodyConverter() { return
-	  new StringHttpMessageConverter(Charset.forName("UTF-8")); }
-	  
-	  @Bean public Filter characterEncodingFilter() { CharacterEncodingFilter
-	  characterEncodingFilter = new CharacterEncodingFilter();
-	  characterEncodingFilter.setEncoding("UTF-8");
-	  characterEncodingFilter.setForceEncoding(true); return
-	  characterEncodingFilter; }
-	 
+	@Bean
+	public HttpMessageConverter<String> responseBodyConverter() {
+		return new StringHttpMessageConverter(Charset.forName("UTF-8"));
+	}
+
+	@Bean
+	public Filter characterEncodingFilter() {
+		CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+		characterEncodingFilter.setEncoding("UTF-8");
+		characterEncodingFilter.setForceEncoding(true);
+		return characterEncodingFilter;
+	}
 
 }

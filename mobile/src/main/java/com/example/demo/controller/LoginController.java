@@ -33,9 +33,11 @@ public class LoginController {
 		UserModel loginUser = new UserModel(id, pw);
 		String token = null;
 		if (verify(id, pw)) // MANAGER.
-			token = jwtService.create(loginUser.getIdent() + ":key", loginUser, loginUser.getIdent() + ":subject");
-		response.setHeader("Authorization", token);
-		result.setData(loginUser);
+			result.setData("OK");
+		else
+			result.setData("FAIL");
+		//response.setHeader("Authorization", token);
+		//result.setData(loginUser);
 
 		return result;
 	}

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.service.UserService;
+import com.example.demo.util.Result;
 
 @RestController
 public class RestAPIController {
@@ -53,15 +54,16 @@ public class RestAPIController {
 		return driver.post;
 	}
 		
-	/*
-	 * public ArrayList<Route> findWay(String a, String b, String c, String d) {
-	 * return null; } public ArrayList<Bus>parseFromRoute(ArrayList<Route>
-	 * routeList) { return null;
-	 */
-	
-	@RequestMapping("/rest2")
-	public String restTest(@RequestParam String str) { // @RequestParam String str
-		return str + "REST TEST!!";
+	@RequestMapping(value = "/setRoute")
+	public Result setRouteMethod(@RequestParam String id, @RequestParam String... busnums) {
+		
+		
+		
+		
+		Result result = Result.successInstance();
+		return result;
 	}
+	
+	
 	
 }

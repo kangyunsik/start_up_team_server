@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.dao.WatchDao">
+
+	<insert id="insertWatch">
+		INSERT INTO watchTable (id,routeno,registered_time,quit_latitude,quit_longitude)
+		VALUES(#{_id},#{_busnum},null,#{_latitude},#{_longitude})
+	</insert>
+
+	<select id="getLocationByName" resultType="com.example.demo.model.FacilityModel">
+		SELECT	latitude, longitude
+		FROM	busStation
+		WHERE	nodename = #{_name}
+	</select>
+</mapper>

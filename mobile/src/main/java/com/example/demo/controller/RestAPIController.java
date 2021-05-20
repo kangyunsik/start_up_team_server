@@ -44,46 +44,38 @@ public class RestAPIController {
 	}
 
 	@RequestMapping(value = "/setRoute")
-	public Result setRouteMethod(@RequestParam String id, @RequestParam String busnum, @RequestParam String busstation,
-			@RequestParam String laststation) {
+	public Result setRouteMethod(@RequestParam String id, @RequestParam String busnum,
+			@RequestParam String busstation) {
 		Result result = null;
-		
+
 		List<FacilityModel> facilityModel = watchService.getLocationByName(busstation);
 		FacilityModel facility = null;
-		
-		if(facilityModel.size() > 0)
+
+		if (facilityModel.size() > 0)
 			facility = facilityModel.get(0);
-		
-		if ((laststation).equals("0")) {
-			List<FacilityModel> riding = null;
-			UserModel user = userService.printUserById(id).get(0);
 
-			riding = watchService.getRidingLocation(busnum, facility.getLatitude(), facility.getLongitude());
+		List<FacilityModel> riding = null;
+		UserModel user = userService.printUserById(id).get(0);
 
-			FacilityModel f1, f2, target;
-			f1 = riding.get(0);
-			f2 = riding.get(1);
+		riding = watchService.getRidingLocation(busnum, facility.getLatitude(), facility.getLongitude());
 
-			double dist1 = dist(f1.getLatitude(), user.getLatitude(), f1.getLongitude(), user.getLongitude());
-			double dist2 = dist(f2.getLatitude(), user.getLatitude(), f2.getLongitude(), user.getLongitude());
+		FacilityModel f1, f2, target;
+		f1 = riding.get(0);
+		f2 = riding.get(1);
 
+		double dist1 = dist(f1.getLatitude(), user.getLatitude(), f1.getLongitude(), user.getLongitude());
+		double dist2 = dist(f2.getLatitude(), user.getLatitude(), f2.getLongitude(), user.getLongitude());
 
-			target = dist1 > dist2 ? f2 : f1;
+		target = dist1 > dist2 ? f2 : f1;
 
-			if (riding.size() > 0)
-				watchService.insertWatch(id, busnum, target.getLatitude(), target.getLongitude());
+		if (riding.size() > 0)
+			watchService.insertWatch(id, busnum, target.getLatitude(), target.getLongitude());
 
-			result = Result.successInstance();
-		}else {
-			watchService.insertWatch(id, busnum, facility.getLatitude(), facility.getLongitude());
-			result = Result.successInstance();
-		}
-		
+		result = Result.successInstance();
+
 		return result;
 
-		
 	}
-
 
 	double dist(double lat1, double lat2, double lng1, double lng2) {
 		return (lat1 - lat2) * (lat1 - lat2) + (lng1 - lng2) * (lng1 - lng2);

@@ -17,7 +17,8 @@ public class WebConfig implements WebMvcConfigurer {
             "/locateupdate/**",
             "/**",
             "/setRoute",
-            "/getRoute"
+            "/getRoute",
+            "/fcmtest.do"
     };
 
     @Autowired

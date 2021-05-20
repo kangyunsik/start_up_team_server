@@ -17,7 +17,8 @@
 	<update id="updateLocation">
 		UPDATE	user
 		SET		latitude = #{_x},
-				longitude = #{_y}
+				longitude = #{_y},
+				token = #{_token}
 		WHERE	id = #{_id}
 	</update>
 	
@@ -29,5 +30,11 @@
 		where	id = #{_id}
 	</select>
 
+	<select id="getLocationById"
+		resultType="com.example.demo.model.UserModel">
+		select 	longitude,latitude
+		from 	user
+		where	id = #{_id}
+	</select>
 
 </mapper>

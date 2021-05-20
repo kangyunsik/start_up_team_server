@@ -6,6 +6,7 @@ public class FacilityModel {
 	private String routeid;
 	private String nodeid;
 	private String nodename;
+	private String name;
 	private int ord;
 	private String location;		// 대략적 위치 (수도권 등)
 	private double longitude;
@@ -61,5 +62,11 @@ public class FacilityModel {
 	}
 	public void setOrd(int ord) {
 		this.ord = ord;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}	
 }

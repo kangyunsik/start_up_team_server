@@ -21,16 +21,24 @@ public class RestAPIController {
 
 	@Autowired
 	WatchService watchService;
+	
+	
+	
 
 	@RequestMapping("/rest")
 	public String restTest() { // @RequestParam String str
+		List<UserModel> users = userService.printUserById("test1");
+		System.out.println("users size : " + users.size());
+		UserModel user = users.get(0);
+		
 		return "REST TEST!!";
 	}
 
 	@RequestMapping(value = "/locateupdate")
-	public String locate(@RequestParam String x, @RequestParam String y, @RequestParam String id) {
+	public String locate(@RequestParam String x, @RequestParam String y, @RequestParam String id,
+			String token) {
 		System.out.println("x = " + x + " / y = " + y + " / id = " + id);
-		userService.updateUserLocation(Double.parseDouble(x), Double.parseDouble(y), id);
+		userService.updateUserLocation(Double.parseDouble(x), Double.parseDouble(y), id,token);
 		return "ok";
 	}
 
@@ -47,16 +55,18 @@ public class RestAPIController {
 	public Result setRouteMethod(@RequestParam String id, @RequestParam String busnum,
 			@RequestParam String busstation) {
 		Result result = null;
-
 		List<FacilityModel> facilityModel = watchService.getLocationByName(busstation);
 		FacilityModel facility = null;
 
+	
+		
 		if (facilityModel.size() > 0)
 			facility = facilityModel.get(0);
 
 		List<FacilityModel> riding = null;
 		UserModel user = userService.printUserById(id).get(0);
 
+		
 		riding = watchService.getRidingLocation(busnum, facility.getLatitude(), facility.getLongitude());
 
 		FacilityModel f1, f2, target;

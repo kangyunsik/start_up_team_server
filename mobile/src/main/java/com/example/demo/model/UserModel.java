@@ -10,6 +10,7 @@ public class UserModel {
 	private String password;
 	private double latitude;
 	private double longitude;
+	private String token;
 	
 	public UserModel(String id, String pw) {
 		this.setId(id);
@@ -48,6 +49,16 @@ public class UserModel {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+
+	public String getToken() {
+		return token;
+	}
+
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 	

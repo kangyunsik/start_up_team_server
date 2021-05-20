@@ -20,5 +20,14 @@
 				longitude = #{_y}
 		WHERE	id = #{_id}
 	</update>
+	
+	
+	<select id="getUserById"
+		resultType="com.example.demo.model.UserModel">
+		select 	id,longitude,latitude
+		from 	user
+		where	id = #{_id}
+	</select>
+
 
 </mapper>

@@ -26,4 +26,9 @@ public class WatchServiceImpl implements WatchService{
 		return dao.getLocationByName(name);
 	}
 
+	@Override
+	public List<FacilityModel> getRidingLocation(String busnum, double latitude, double longitude) {
+		return dao.getRidingLocation(busnum,latitude,longitude);
+	}
+
 }

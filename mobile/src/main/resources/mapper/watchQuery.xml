@@ -14,4 +14,14 @@
 		FROM	busStation
 		WHERE	nodename = #{_name}
 	</select>
+	
+	
+	<select id="getRidingLocation" resultType="com.example.demo.model.FacilityModel">
+	SELECT	latitude,longitude
+	FROM	busStation bs, busTable bt
+	WHERER	bs.routeid = bt.routeid and bs.routeid = #{_name}
+	ORDER BY(latitude - ${_latitude}) + (longitude - ${_longitude})
+	LIMIT 2;
+	</select>
+	
 </mapper>

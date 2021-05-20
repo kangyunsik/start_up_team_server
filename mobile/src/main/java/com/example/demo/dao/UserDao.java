@@ -13,4 +13,6 @@ public interface UserDao {
 
 	List<UserModel> targetUser(@Param("_id") String id, @Param("_pw") String pw);
 	void updateLocation(@Param("_x") double x, @Param("_y") double y,@Param("_id") String id);
+	
+	List<UserModel> getUserById(@Param("_id") String id);
 }

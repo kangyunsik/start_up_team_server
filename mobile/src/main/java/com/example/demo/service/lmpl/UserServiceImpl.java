@@ -31,4 +31,10 @@ public class UserServiceImpl implements UserService{
 		dao.updateLocation(x,y,id);
 		return;
 	}
+
+	@Override
+	public List<UserModel> printUserById(String id) {
+		dao.getUserById(id);
+		return null;
+	}
 }

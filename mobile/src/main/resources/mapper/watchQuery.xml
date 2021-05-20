@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.dao.WatchDao">
+
+	<insert id="insertWatch">
+		INSERT INTO watchTable (id,routeno,registered_time,quit_latitude,quit_longitude)
+		VALUES(#{_id},#{_busnum},null,#{_latitude},#{_longitude})
+	</insert>
+
+	<select id="getLocationByName" resultType="com.example.demo.model.FacilityModel">
+		SELECT	latitude, longitude
+		FROM	busStation
+		WHERE	nodename = #{_name}
+	</select>
+	
+	
+	<select id="getRidingLocation" resultType="com.example.demo.model.FacilityModel">
+		SELECT	bs.latitude,bs.longitude
+		FROM	busStation bs, busTable bt
+		WHERE	bs.routeid = bt.routeid and bt.routeno = #{_name}
+		ORDER BY(latitude - ${_latitude}) + (longitude - ${_longitude})
+		LIMIT 2;
+	</select>
+	
+	<delete id="deleteExpired">
+		DELETE
+		FROM 	watchTable
+		WHERE	now() - watchTable.registered_time > ${_limit}
+	</delete>
+	
+	<select id="getBusId" resultType="com.example.demo.model.BusTableModel">
+		select routeid, citycode, routeno
+		from busTable
+		where busTable.routeno in (select distinct(watchTable.routeno) from watchTable)
+			and busTable.citycode = #{_citycode}
+	</select>
+	
+	<insert id="insertBusLocation">
+		INSERT INTO bus_location(vehicleno,routeno,latitude,longitude,hit)
+		VALUES(#{_vehicleno},#{_routeno},${_latitude},${_longitude},0)
+		ON DUPLICATE KEY
+			UPDATE latitude = ${_latitude}, longitude = ${_longitude} 
+		
+	</insert>
+	
+	<select id="findActUser" resultType="com.example.demo.model.UserModel">
+		SELECT 	latitude, longitude
+		FROM	user
+		WHERE	user.id in (	select 	distinct(watchTable.id)
+								from 	watchTable)
+	</select>
+	
+	<select id="getRealDist" resultType="com.example.demo.model.RealBusModel">
+		SELECT	*
+		FROM	bus_location
+	</select>
+	
+	<update id="hit">
+		UPDATE bus_location
+		SET hit = hit+1
+		WHERE bus_location.vehicleno = #{_vehicleno}
+	</update>
+	
+	<select id="getOverHitUser" resultType="com.example.demo.model.UserModel">
+		SELECT	*
+		FROM	user
+		WHERE	user.id in (SELECT 	id
+							FROM	bus_location bl, watchTable wt
+							WHERE	bl.routeno = wt.routeno and bl.hit >= 60)
+	</select>
+	
+	<delete id="deleteByToken">
+		DELETE FROM watchService
+		WHERE id in (	SELECT 	id 
+						FROM	user
+						WHERE 	token = #{_token}
+					)
+	</delete>
+</mapper>

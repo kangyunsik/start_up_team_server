@@ -26,4 +26,15 @@ public class UserServiceImpl implements UserService{
 		return user;
 	}
 
+	@Override
+	public void updateUserLocation(double x,double y,String id, String token) {
+		dao.updateLocation(x,y,id,token);
+		return;
+	}
+
+	@Override
+	public List<UserModel> printUserById(String id) {
+		return dao.getUserById(id);
+	}
+	
 }

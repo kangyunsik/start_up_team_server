@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.dao.MessageDao">
+
+	<select id="getMessage"
+		resultType="com.example.demo.model.MessageQueue">
+		SELECT	*
+		FROM 	messageQueue
+	</select>
+
+	<select id="getBusByVehicleNo"
+		resultType="com.example.demo.model.MessageQueue">
+		SELECT 	*
+		FROM 	bus_location
+		WHERE	vehicleno = #{_vehicleno}
+	</select>
+	
+	<delete id="deleteByToken">
+		DELETE FROM messageQueue
+		WHERE token = #{_token}
+	</delete>
+	
+	<insert id="insertMessageQueue">
+		INSERT INTO messageQueue(token,latitude,longitude,vehicleno)
+		VALUES(#{_token},${_latitude},${_longitude},#{_vehicleno})
+	</insert>
+</mapper>

@@ -41,8 +41,8 @@ public class WatchServiceImpl implements WatchService{
 	}
 
 	@Override
-	public List<BusTableModel> getBusId() {
-		return dao.getBusId();
+	public List<BusTableModel> getBusId(String citycode) {
+		return dao.getBusId(citycode);
 	}
 
 	@Override
@@ -69,4 +69,11 @@ public class WatchServiceImpl implements WatchService{
 	public List<UserModel> getOverHitUser() {
 		return dao.getOverHitUser();
 	}
+
+	@Override
+	public void deleteByToken(String token) {
+		dao.deleteByToken(token);
+		return;
+	}
+
 }

@@ -18,11 +18,12 @@ public interface WatchDao {
 	List<FacilityModel> getRidingLocation(@Param("_name") String name, @Param("_latitude") double latitude,
 			@Param("_longitude") double longitude);
 	void deleteExpired(@Param("_limit") int limit);
-	List<BusTableModel> getBusId();
+	List<BusTableModel> getBusId(@Param("_citycode") String citycode);
 	void insertBusLocation(@Param("_vehicleno")String vehicleno, @Param("_routeno") String routenm,
 			@Param("_latitude") double latitude, @Param("_longitude") double longitude);
 	List<UserModel> findActUser();
 	List<RealBusModel> getRealDist();
 	void hit(@Param("_vehicleno") String vehicleno);
 	List<UserModel> getOverHitUser();
+	void deleteByToken(@Param("_token") String token);
 }

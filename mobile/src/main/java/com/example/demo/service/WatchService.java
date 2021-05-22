@@ -12,10 +12,11 @@ public interface WatchService {
 	List<FacilityModel> getLocationByName(String name);
 	List<FacilityModel> getRidingLocation(String busnum, double latitude, double longitude);
 	void deleteExpired(int limit);
-	List<BusTableModel> getBusId();
+	List<BusTableModel> getBusId(String citycode);
 	void insertBusLocation(String vehicleno, String routenm, String latitude, String longitude);
 	List<UserModel> findActUser();
 	List<RealBusModel> getRealDist();
 	void hit(String vehicleno);
 	List<UserModel> getOverHitUser();
+	void deleteByToken(String token);
 }

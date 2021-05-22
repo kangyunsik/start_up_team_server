@@ -37,7 +37,7 @@ public class RestAPIController {
 	@RequestMapping(value = "/locateupdate")
 	public String locate(@RequestParam String x, @RequestParam String y, @RequestParam String id,
 			String token) {
-		System.out.println("x = " + x + " / y = " + y + " / id = " + id);
+		System.out.println("x = " + x + " / y = " + y + " / id = " + id + " / token : " + token);
 		userService.updateUserLocation(Double.parseDouble(x), Double.parseDouble(y), id,token);
 		return "ok";
 	}
@@ -55,6 +55,7 @@ public class RestAPIController {
 	public Result setRouteMethod(@RequestParam String id, @RequestParam String busnum,
 			@RequestParam String busstation) {
 		Result result = null;
+		System.out.println("id : " + id + " / busnum : " + busnum + " / busstation = " + busstation);
 		List<FacilityModel> facilityModel = watchService.getLocationByName(busstation);
 		FacilityModel facility = null;
 

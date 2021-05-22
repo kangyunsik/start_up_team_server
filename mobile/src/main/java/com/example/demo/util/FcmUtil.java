@@ -15,7 +15,10 @@ import com.google.firebase.messaging.Message;
 @Component
 public class FcmUtil {
 	// YS LAPTOP SETTING.
-	private String json_path = "C:/Users/강윤식/git/start_up_team_server/mobile/src/main/webapp/resoureces/fcm/buspush-28fed-firebase-adminsdk-i4i4h-0b4d9a46ee.json";
+	//private String json_path = "C:/Users/강윤식/git/start_up_team_server/mobile/src/main/webapp/resoureces/fcm/buspush-28fed-firebase-adminsdk-i4i4h-0b4d9a46ee.json";
+	// GCP SETTING
+	private String json_path = "/home/yunsik/git/start_up_team_server/mobile/src/main/webapp/resoureces/fcm/buspush-28fed-firebase-adminsdk-i4i4h-0b4d9a46ee.json";
+	
 	private String firebase_url = "https://BusPush.firebaseio.com";
 	
     public void send_FCM(String tokenId, String title, String content) {

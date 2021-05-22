@@ -6,7 +6,7 @@
 
 	<select id="getUser"
 		resultType="com.example.demo.model.UserModel">
-		select id,longitude,latitude from user
+		select id,longitude,latitude,token from user
 	</select>
 
 	<select id="targetUser"

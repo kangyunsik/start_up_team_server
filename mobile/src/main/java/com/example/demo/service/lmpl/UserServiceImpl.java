@@ -15,6 +15,11 @@ public class UserServiceImpl implements UserService{
 	private UserDao dao;
 	
 	@Override
+	public List<UserModel> getUserByToken(String token){
+		return dao.getUserByToken(token);
+	}
+
+	@Override
 	public List<UserModel> printUser(){
 		List<UserModel> user = dao.getUser();
 		return user;

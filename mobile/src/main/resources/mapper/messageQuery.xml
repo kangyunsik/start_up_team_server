@@ -11,10 +11,10 @@
 	</select>
 
 	<select id="getBusByVehicleNo"
-		resultType="com.example.demo.model.MessageQueue">
+		resultType="com.example.demo.model.RealBusModel">
 		SELECT 	*
 		FROM 	bus_location
-		WHERE	vehicleno = #{_vehicleno}
+		WHERE	vehicleno = #{_vehicle}
 	</select>
 	
 	<delete id="deleteByToken">
@@ -25,5 +25,8 @@
 	<insert id="insertMessageQueue">
 		INSERT INTO messageQueue(token,latitude,longitude,vehicleno)
 		VALUES(#{_token},${_latitude},${_longitude},#{_vehicleno})
+		ON DUPLICATE KEY
+			UPDATE token = #{_token} 
+		
 	</insert>
 </mapper>

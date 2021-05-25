@@ -18,7 +18,8 @@ public class WebConfig implements WebMvcConfigurer {
             "/**",
             "/setRoute",
             "/getRoute",
-            "/fcmtest.do"
+            "/fcmtest.do",
+            "/clearwatchtable"
     };
 
     @Autowired

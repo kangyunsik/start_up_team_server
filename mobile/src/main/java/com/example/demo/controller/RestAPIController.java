@@ -23,7 +23,12 @@ public class RestAPIController {
 	WatchService watchService;
 	
 	
+	@RequestMapping("/clearwatchtable")
+	public String clear() { // @RequestParam String str
+		watchService.clearWatchTable();
 	
+		return "OK";
+	}
 
 	@RequestMapping("/rest")
 	public String restTest() { // @RequestParam String str
@@ -53,13 +58,24 @@ public class RestAPIController {
 
 	@RequestMapping(value = "/setRoute")
 	public Result setRouteMethod(@RequestParam String id, @RequestParam String busnum,
-			@RequestParam String busstation) {
+			@RequestParam String busstation, @RequestParam String startstation) {
 		Result result = null;
-		System.out.println("id : " + id + " / busnum : " + busnum + " / busstation = " + busstation);
+		System.out.println("id : " + id + " / busnum : " + busnum + " / busstation = " + busstation +" / start : " + startstation);
 		List<FacilityModel> facilityModel = watchService.getLocationByName(busstation);
 		FacilityModel facility = null;
 
-	
+		Location loc = null;
+		
+		List<FacilityModel> ss = watchService.getLocationByName(startstation);
+		
+		if(ss.size()>0) {
+			FacilityModel f = ss.get(0);
+			
+			loc = new Location(f.getNodename(),f.getLatitude(),f.getLongitude());
+			System.out.println(f.getNodename() +":" +f.getLatitude()+":"+f.getLongitude());
+		}else {
+			System.out.println("ss size is 0. error.");
+		}
 		
 		if (facilityModel.size() > 0)
 			facility = facilityModel.get(0);
@@ -83,7 +99,7 @@ public class RestAPIController {
 			watchService.insertWatch(id, busnum, target.getLatitude(), target.getLongitude());
 
 		result = Result.successInstance();
-
+		result.setData(loc);
 		return result;
 
 	}
@@ -92,4 +108,14 @@ public class RestAPIController {
 		return (lat1 - lat2) * (lat1 - lat2) + (lng1 - lng2) * (lng1 - lng2);
 	}
 
+	class Location{
+		public String name;
+		public double latitude;
+		public double longitude;
+		public Location(String name, double latitude, double longitude) {
+			this.name = name;
+			this.latitude = latitude;
+			this.longitude = longitude;
+		}
+	}
 }

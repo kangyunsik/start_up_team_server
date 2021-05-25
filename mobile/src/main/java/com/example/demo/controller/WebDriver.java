@@ -130,6 +130,7 @@ public class WebDriver {
 							adding = adding.replace("<span>", "");
 							adding = adding.replace("</span>", "");
 							adding = adding.replaceAll(" ", "");
+							adding = adding.replace(",", "-");
 							info[num].leftlength = adding;
 						}
 					}

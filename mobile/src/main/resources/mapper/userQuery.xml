@@ -4,6 +4,12 @@
 
 <mapper namespace="com.example.demo.dao.UserDao">
 
+	<select id="getUserByToken"
+		resultType="com.example.demo.model.UserModel">
+		select id,longitude,latitude,token from user
+		where token = #{_token}
+	</select>
+
 	<select id="getUser"
 		resultType="com.example.demo.model.UserModel">
 		select id,longitude,latitude,token from user

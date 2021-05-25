@@ -26,4 +26,5 @@ public interface WatchDao {
 	void hit(@Param("_vehicleno") String vehicleno);
 	List<UserModel> getOverHitUser();
 	void deleteByToken(@Param("_token") String token);
+	void clearWatchTable();
 }

@@ -19,4 +19,5 @@ public interface WatchService {
 	void hit(String vehicleno);
 	List<UserModel> getOverHitUser();
 	void deleteByToken(String token);
+	void clearWatchTable();
 }

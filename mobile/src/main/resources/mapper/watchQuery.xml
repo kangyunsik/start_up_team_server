@@ -6,13 +6,15 @@
 
 	<insert id="insertWatch">
 		INSERT INTO watchTable (id,routeno,registered_time,quit_latitude,quit_longitude)
-		VALUES(#{_id},#{_busnum},null,#{_latitude},#{_longitude})
+		VALUES(#{_id},#{_busnum},null,${_latitude},${_longitude})
+		ON DUPLICATE KEY
+			UPDATE quit_latitude = ${_latitude}, quit_longitude = ${_longitude};
 	</insert>
 
 	<select id="getLocationByName" resultType="com.example.demo.model.FacilityModel">
-		SELECT	latitude, longitude
+		SELECT	nodename, latitude, longitude
 		FROM	busStation
-		WHERE	nodename = #{_name}
+		WHERE	nodename 	LIKE '%${_name}%'
 	</select>
 	
 	
@@ -77,5 +79,11 @@
 						FROM	user
 						WHERE 	token = #{_token}
 					)
+	</delete>
+	
+	
+	<delete id="clearWatchTable">
+		DELETE
+		FROM	watchTable;
 	</delete>
 </mapper>

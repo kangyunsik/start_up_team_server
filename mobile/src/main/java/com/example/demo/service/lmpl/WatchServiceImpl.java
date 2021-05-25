@@ -76,4 +76,9 @@ public class WatchServiceImpl implements WatchService{
 		return;
 	}
 
+	@Override
+	public void clearWatchTable() {
+		dao.clearWatchTable();
+		return;
+	}
 }

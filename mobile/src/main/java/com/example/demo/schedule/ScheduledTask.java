@@ -38,7 +38,7 @@ public class ScheduledTask {
 
 	@Autowired
 	WatchService watchService;
-	
+
 	@Autowired
 	MessageQueueService messageQueueService;
 
@@ -47,31 +47,38 @@ public class ScheduledTask {
 	@Scheduled(fixedDelay = 5000)
 	public void messageSender() {
 		List<MessageQueue> messageQueue = messageQueueService.getMessage();
+		UserModel user;
 		
-		for(MessageQueue msg : messageQueue) {
+		for (MessageQueue msg : messageQueue) {
 			String token = msg.getToken();
-			double userlati = msg.getLatitude();
-			double userlongi = msg.getLongitude();
-			
+			try {
+				user = userService.getUserByToken(token).get(0);
+			} catch (Exception e) {
+				continue;
+			}
+			double userlati = user.getLatitude();
+			double userlongi = user.getLongitude();
+
 			RealBusModel targetBus = (messageQueueService.getBusByVehicleNo(msg.getVehicleno())).get(0);
-			double buslati,buslongi;
-			
+			double buslati, buslongi;
+
 			buslati = targetBus.getLatitude();
 			buslongi = targetBus.getLongitude();
-			
-			if(buslati > buslongi) {
+
+			if (buslati > buslongi) {
 				double temp = buslati;
 				buslati = buslongi;
 				buslongi = temp;
 			}
-			
+
 			double dist = Math.abs(userlati - buslati) + Math.abs(userlongi - buslongi);
-			
-			if(dist <= measures) {
+			System.out.println("user : " + userlati + " / " + userlongi);
+			System.out.println("bus  : " + buslati + " / " + buslongi);
+			System.out.println("dist : " + dist);
+			if (dist <= measures) {
 				String title = "exit alarm title.";
 				String content = "exit alarm content.";
 				fcmUtil.send_FCM(token, title, content);
-				watchService.deleteByToken(msg.getToken());
 				messageQueueService.deleteByToken(token);
 			}
 		}
@@ -79,20 +86,24 @@ public class ScheduledTask {
 
 	@Scheduled(fixedDelay = 5000)
 	public void runEvery5secs1() {
-		System.out.println("checked1.");
 		watchService.deleteExpired(limit_time);
-
-		List<BusTableModel> bustablemodels = watchService.getBusId("31190"); // 31190 == test value. (citycode)
+		List<BusTableModel> bustablemodels;
+		bustablemodels = watchService.getBusId("31190"); // 31190 == test value. (citycode = youngin)
+		for (BusTableModel btm : bustablemodels) {
+			getLocation(btm);
+		}
+		bustablemodels = watchService.getBusId("31010"); // 31010 == test value. (citycode = suwon)
+		for (BusTableModel btm : bustablemodels) {
+			getLocation(btm);
+		}
+		bustablemodels = watchService.getBusId("31020"); // 31020 == test value. (citycode = sengnam)
 		for (BusTableModel btm : bustablemodels) {
 			getLocation(btm);
 		}
 	}
-	
+
 	@Scheduled(fixedDelay = 5000)
 	public void runEvery5secs2() {
-		System.out.println("checked2.");
-		watchService.deleteExpired(limit_time);
-		System.out.println("checked2. one");
 		List<UserModel> users = watchService.findActUser();
 
 		for (UserModel user : users) {
@@ -103,36 +114,37 @@ public class ScheduledTask {
 			List<RealBusModel> realDist = watchService.getRealDist();
 			// busTableModel에 routeno, vehicleno, dist 추가.
 			System.out.println("checked2. three");
-			
+
 			RealBusModel bm = realDist.get(0);
 			double bmdist, btmdist;
 
 			for (RealBusModel btm : realDist) {
-				
+
 				bmdist = Math.abs(bm.getLatitude() - lati) + Math.abs(bm.getLongitude() - longi);
-				if(bm.getLatitude() > bm.getLongitude()) {
-					 bmdist = Math.abs(bm.getLongitude() - lati) + Math.abs(bm.getLatitude() - longi);
+				if (bm.getLatitude() > bm.getLongitude()) {
+					bmdist = Math.abs(bm.getLongitude() - lati) + Math.abs(bm.getLatitude() - longi);
 				}
-				
+
 				btmdist = Math.abs(btm.getLatitude() - lati) + Math.abs(btm.getLongitude() - longi);
-				if(btm.getLatitude() > btm.getLongitude()) {
-					 btmdist = Math.abs(btm.getLongitude() - lati) + Math.abs(btm.getLatitude() - longi);
+				if (btm.getLatitude() > btm.getLongitude()) {
+					btmdist = Math.abs(btm.getLongitude() - lati) + Math.abs(btm.getLatitude() - longi);
 				}
-				
-				System.out.println("bm dist : " + bmdist + " btmdist : " + btmdist);
-				System.out.println("bm lati : " + bm.getLatitude() + " bm long : " + bm.getLongitude());
-				System.out.println("btm lati : " + btm.getLatitude() + " btm long : " + btm.getLongitude());
-				
+
+//				System.out.println("bm dist : " + bmdist + " btmdist : " + btmdist);
+//				System.out.println("bm lati : " + bm.getLatitude() + " bm long : " + bm.getLongitude());
+//				System.out.println("btm lati : " + btm.getLatitude() + " btm long : " + btm.getLongitude());
+
 				bm = bmdist > btmdist ? btm : bm;
 			}
 
-			
-			System.out.println("bm : " + bm.getRouteno());
-			if(bm.getLatitude() < bm.getLongitude())
-				System.out.println("man dist : " + Math.abs(bm.getLatitude() - lati) +"/"+ Math.abs(bm.getLongitude() - longi));
+//			System.out.println("bm : " + bm.getRouteno());
+			if (bm.getLatitude() < bm.getLongitude())
+				System.out.println(
+						"man dist : " + Math.abs(bm.getLatitude() - lati) + "/" + Math.abs(bm.getLongitude() - longi));
 			else
-				System.out.println("man dist : " + Math.abs(bm.getLatitude() - longi) + Math.abs(bm.getLongitude() - lati));
-			
+				System.out.println(
+						"man dist : " + Math.abs(bm.getLatitude() - longi) + Math.abs(bm.getLongitude() - lati));
+
 			if (Math.abs(bm.getLatitude() - lati) + Math.abs(bm.getLongitude() - longi) <= measures) {
 				watchService.hit(bm.getVehicleno()); // after, need to modify
 			}
@@ -141,8 +153,9 @@ public class ScheduledTask {
 			if (targetUser != null && targetUser.size() > 0) {
 				UserModel us = targetUser.get(0);
 				// Send FCM to targetUser.
-				
-				messageQueueService.insertMessageQueue(us.getToken(),us.getLatitude(),us.getLongitude(),bm.getVehicleno());
+				watchService.deleteByToken(us.getToken());
+				messageQueueService.insertMessageQueue(us.getToken(), us.getLatitude(), us.getLongitude(),
+						bm.getVehicleno());
 			}
 		}
 	}
@@ -150,10 +163,7 @@ public class ScheduledTask {
 	private void getLocation(BusTableModel btm) {
 		String routeno = btm.getRouteid();
 		String citycode = Integer.toString(btm.getCitycode());
-		
-		
-		
-		
+
 		System.out.println("citycode : " + citycode + " / routeno : " + routeno);
 		String url = "http://openapi.tago.go.kr/openapi/service/BusLcInfoInqireService/getRouteAcctoBusLcList?serviceKey="
 				+ serviceKey + "&cityCode=" + citycode + "&routeId=" + routeno;
@@ -176,14 +186,14 @@ public class ScheduledTask {
 		for (int temp = 0; temp < nList.getLength(); temp++) {
 			String arg1, arg2, arg3, arg4;
 			try {
-			Node nNode = nList.item(temp);
+				Node nNode = nList.item(temp);
 
-			Element eElement = (Element) nNode;
-			arg1 = getTagValue("vehicleno", eElement);
-			arg2 = getTagValue("routenm", eElement);
-			arg3 = getTagValue("gpslati", eElement);
-			arg4 = getTagValue("gpslong", eElement);
-			}catch(Exception e) {
+				Element eElement = (Element) nNode;
+				arg1 = getTagValue("vehicleno", eElement);
+				arg2 = getTagValue("routenm", eElement);
+				arg3 = getTagValue("gpslati", eElement);
+				arg4 = getTagValue("gpslong", eElement);
+			} catch (Exception e) {
 				continue;
 			}
 
@@ -199,12 +209,12 @@ public class ScheduledTask {
 
 	}
 
-	private static String getTagValue(String tag, Element eElement) throws Exception{
+	private static String getTagValue(String tag, Element eElement) throws Exception {
 		NodeList nlList = null;
 		Node nValue = null;
 		nlList = eElement.getElementsByTagName(tag).item(0).getChildNodes();
 		nValue = (Node) nlList.item(0);
-		
+
 		if (nValue == null)
 			return null;
 		return nValue.getNodeValue();

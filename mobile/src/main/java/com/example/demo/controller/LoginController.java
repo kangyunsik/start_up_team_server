@@ -14,6 +14,7 @@ import com.example.demo.model.UserModel;
 import com.example.demo.service.JwtService;
 import com.example.demo.service.UserService;
 import com.example.demo.util.Result;
+import com.example.demo.util.SHA256;
 
 @RestController
 public class LoginController {
@@ -31,6 +32,9 @@ public class LoginController {
 		String token = request.getParameter("token");
 		Result result = Result.successInstance();
 
+		System.out.println("id : " + id);
+		System.out.println("pw : " + pw);
+		System.out.println("tk : " + token);
 		UserModel loginUser = new UserModel(id, pw);
 		
 		if (verify(id, pw)) { // MANAGER.

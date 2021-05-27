@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.FacilityModel;
 import com.example.demo.model.UserModel;
+import com.example.demo.service.MessageQueueService;
 import com.example.demo.service.UserService;
 import com.example.demo.service.WatchService;
 import com.example.demo.util.Result;
@@ -22,10 +23,28 @@ public class RestAPIController {
 	@Autowired
 	WatchService watchService;
 	
+	@Autowired
+	MessageQueueService messageQueueService;
+	
+	@RequestMapping("/signin")
+	public String signin(@RequestParam String id, @RequestParam String pw, @RequestParam String email) {
+		System.out.println("id : " + id + " / pw = " + pw + " email = " + email);
+		userService.insertUser(id,pw,email);
+		String result = "OK";
+		return result;
+	}
+	
 	
 	@RequestMapping("/clearwatchtable")
 	public String clear() { // @RequestParam String str
 		watchService.clearWatchTable();
+	
+		return "OK";
+	}
+	
+	@RequestMapping("/clearmessagequeue")
+	public String clearmq() { // @RequestParam String str
+		watchService.clearMessageQueue();
 	
 		return "OK";
 	}
@@ -44,7 +63,12 @@ public class RestAPIController {
 			String token) {
 		System.out.println("x = " + x + " / y = " + y + " / id = " + id + " / token : " + token);
 		userService.updateUserLocation(Double.parseDouble(x), Double.parseDouble(y), id);
-		return "ok";
+		
+		for(UserModel u : messageQueueService.findActUser()) {
+			if(u.getId().equals(id))
+				return "ok";
+		}
+		return "stop";
 	}
 
 	@RequestMapping(value = "/getRoute")

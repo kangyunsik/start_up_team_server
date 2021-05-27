@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.dao.MessageDao;
 import com.example.demo.model.MessageQueue;
 import com.example.demo.model.RealBusModel;
+import com.example.demo.model.UserModel;
 import com.example.demo.service.MessageQueueService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -43,5 +44,10 @@ public class MessageQueueServiceImpl implements MessageQueueService {
 			String busstation,String laststation) {
 		dao.insertMessageQueue(token, latitude, longitude, vehicle,busstation,laststation);
 		return;
+	}
+	
+	@Override
+	public List<UserModel> findActUser(){
+		return dao.getActUser();
 	}
 }

@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.example.demo.model.MessageQueue;
 import com.example.demo.model.RealBusModel;
+import com.example.demo.model.UserModel;
 
 public interface MessageDao {
 	List<MessageQueue> getMessage();
@@ -14,4 +15,5 @@ public interface MessageDao {
 	void insertMessageQueue(@Param("_token") String token, @Param("_latitude") double latitude, 
 			@Param("_longitude") double longitude, @Param("_vehicleno") String vehicle,
 			@Param("_busstation") String busstation, @Param("_laststation") String laststation);
+	List<UserModel> getActUser();
 }

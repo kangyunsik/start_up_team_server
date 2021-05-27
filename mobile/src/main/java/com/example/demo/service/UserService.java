@@ -10,4 +10,5 @@ public interface UserService {
 	void updateUserLocation(double x,double y,String id);
 	List<UserModel> getUserByToken(String token);
 	void setToken(String token, String id);
+	void insertUser(String id,String pw,String email);
 }

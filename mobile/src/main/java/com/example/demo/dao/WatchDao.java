@@ -23,7 +23,7 @@ public interface WatchDao {
 	void insertBusLocation(@Param("_vehicleno")String vehicleno, @Param("_routeno") String routenm,
 			@Param("_latitude") double latitude, @Param("_longitude") double longitude);
 	List<UserModel> findActUser();
-	List<RealBusModel> getRealDist();
+	List<RealBusModel> getRealDist(@Param("_id") String id);
 	void hit(@Param("_vehicleno") String vehicleno);
 	List<UserModel> getOverHitUser();
 	void deleteByToken(@Param("_token") String token);
@@ -31,4 +31,6 @@ public interface WatchDao {
 	void updateHit(@Param("_vehicleno") String vehicleno);
 	void setStations(@Param("_id")String id,@Param("_busstation") String busstation, @Param("_laststation") String laststation);
 	List<WatchModel> getWatchById(@Param("_id")String id);
+	void clearMessageQueue();
+	void hit2();
 }

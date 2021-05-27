@@ -48,4 +48,10 @@ public class UserServiceImpl implements UserService{
 		return;
 	}
 	
+	@Override
+	public void insertUser(String id,String pw,String email) {
+		dao.insertUser(id,pw,email);
+		return;
+	}
+	
 }

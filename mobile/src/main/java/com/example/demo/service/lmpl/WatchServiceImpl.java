@@ -56,8 +56,8 @@ public class WatchServiceImpl implements WatchService{
 		return dao.findActUser();
 	}
 	
-	public List<RealBusModel> getRealDist(){
-		return dao.getRealDist();
+	public List<RealBusModel> getRealDist(String id){
+		return dao.getRealDist(id);
 	}
 	
 	@Override
@@ -98,5 +98,17 @@ public class WatchServiceImpl implements WatchService{
 	@Override
 	public List<WatchModel> getWatchById(String id){
 		return dao.getWatchById(id);
+	}
+	
+	@Override
+	public void clearMessageQueue() {
+		dao.clearMessageQueue();
+		return;
+	}
+	
+	@Override
+	public void hit2() {
+		dao.hit2();
+		return;
 	}
 }

@@ -29,7 +29,7 @@ import com.example.demo.util.FcmUtil;
 @Component
 public class ScheduledTask {
 	private String serviceKey = "n8%2FD0zEruryexLDsaOSUdl2o93qJBNr1zI13UEPXD8BLUVQ4qeUXNh%2F8SmmaqyPtIBIXqtb%2BiEX8GqpIyUqVjw%3D%3D";
-	private double measures = 0.004; // about 250 meter
+	private double measures = 0.007; // about 250 meter
 	//private double measures = 20000.0; // about 130 meter
 
 	@Autowired
@@ -53,19 +53,22 @@ public class ScheduledTask {
 		
 		for (MessageQueue msg : messageQueue) {
 			String token = msg.getToken();
+			
+			List<RealBusModel> rbm = messageQueueService.getBusByVehicleNo(msg.getVehicleno());
+			RealBusModel rb;
 			try {
-				user = userService.getUserByToken(token).get(0);
-			} catch (Exception e) {
+				rb = rbm.get(0);
+			}catch(Exception e) {
 				continue;
 			}
-			double userlati = user.getLatitude();
-			double userlongi = user.getLongitude();
+			double buslati = rb.getLatitude();
+			double buslongi = rb.getLongitude();
 
+			System.out.println("msg lati : " + msg.getLatitude() + "/ longi : " + msg.getLongitude());
 
-
-			double dist = Math.abs(userlati - msg.getLatitude()) + Math.abs(userlongi - msg.getLongitude());
-			System.out.println("user : " + userlati + " / " + userlongi);
-			System.out.println("bus  : " + msg.getLatitude() + " / " + msg.getLongitude());
+			double dist = Math.abs(buslati - msg.getLatitude()) + Math.abs(buslongi - msg.getLongitude());
+			System.out.println("bus place: " + buslati + " / " + buslongi);
+			System.out.println("exit place  : " + msg.getLatitude() + " / " + msg.getLongitude());
 			System.out.println("dist : " + dist);
 			if (dist <= measures) {
 				String title;
@@ -85,6 +88,7 @@ public class ScheduledTask {
 	@Scheduled(fixedDelay = 5000)
 	public void runEvery5secs1() {
 		watchService.deleteExpired(limit_time);
+		watchService.hit2();
 		List<BusTableModel> bustablemodels;
 		bustablemodels = watchService.getBusId("31190"); // 31190 == test value. (citycode = youngin)
 		for (BusTableModel btm : bustablemodels) {
@@ -109,7 +113,7 @@ public class ScheduledTask {
 			double lati = user.getLatitude();
 			double longi = user.getLongitude();
 			System.out.println("user lati : " + lati + "/ longi : " + longi);
-			List<RealBusModel> realDist = watchService.getRealDist();
+			List<RealBusModel> realDist = watchService.getRealDist(user.getId());
 			// busTableModel에 routeno, vehicleno, dist 추가.
 			System.out.println("checked2. three");
 
@@ -142,7 +146,8 @@ public class ScheduledTask {
 			else
 				System.out.println(
 						"man dist : " + Math.abs(bm.getLatitude() - longi) + Math.abs(bm.getLongitude() - lati));
-
+				
+			System.out.println(bm.getVehicleno());
 			if (Math.abs(bm.getLatitude() - lati) + Math.abs(bm.getLongitude() - longi) <= measures) {
 				watchService.hit(bm.getVehicleno()); // after, need to modify
 			}
@@ -153,12 +158,12 @@ public class ScheduledTask {
 				// Send FCM to targetUser.
 				WatchModel wm = watchService.getWatchById(us.getId()).get(0);
 				
-				messageQueueService.insertMessageQueue(us.getToken(), us.getLatitude(), us.getLongitude(),
-						bm.getVehicleno(),wm.getBusstation(),wm.getLaststation());
+				messageQueueService.insertMessageQueue(us.getToken(), wm.getQuit_latitude(), wm.getQuit_longitude(),
+						wm.getVehicleno(),wm.getBusstation(),wm.getLaststation());
 				
 				
-				watchService.deleteByToken(us.getToken());
-				watchService.updateHit(bm.getVehicleno());
+				//watchService.deleteByToken(us.getToken());
+				watchService.updateHit(wm.getVehicleno());
 			}
 		}
 	}

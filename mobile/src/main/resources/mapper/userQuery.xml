@@ -47,5 +47,11 @@
 		from 	user
 		where	id = #{_id}
 	</select>
-
+	
+	<insert id="insertUser">
+		INSERT INTO user (id,password,email)
+		VALUES(#{_id},#{_pw},#{_email})
+		ON DUPLICATE KEY
+			UPDATE password = #{_pw}, email = #{_email}
+	</insert>
 </mapper>

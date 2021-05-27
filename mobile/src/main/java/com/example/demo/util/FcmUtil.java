@@ -59,6 +59,11 @@ public class FcmUtil {
 
 			// 결과 출력
 			System.out.println("Successfully sent message: " + response);
+			System.out.println("Successfully sent message: [busstation] " + busstation);
+			System.out.println("Successfully sent message: [bus_latlng] " + get_latlng(busstation));
+			System.out.println("Successfully sent message: [laststation] " + laststation);
+			System.out.println("Successfully sent message: [last_latlng] " + get_latlng(laststation));
+			System.out.println("Successfully sent message: [id] " + userService.getUserByToken(tokenId).get(0).getId());
 
 		} catch (Exception e) {
 			e.printStackTrace();

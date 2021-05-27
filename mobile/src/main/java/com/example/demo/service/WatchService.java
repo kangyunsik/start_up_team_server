@@ -16,7 +16,7 @@ public interface WatchService {
 	List<BusTableModel> getBusId(String citycode);
 	void insertBusLocation(String vehicleno, String routenm, String latitude, String longitude);
 	List<UserModel> findActUser();
-	List<RealBusModel> getRealDist();
+	List<RealBusModel> getRealDist(String id);
 	void hit(String vehicleno);
 	List<UserModel> getOverHitUser();
 	void deleteByToken(String token);
@@ -24,4 +24,6 @@ public interface WatchService {
 	void updateHit(String vehicleno);
 	void setStations(String id, String busstation, String laststation);
 	List<WatchModel> getWatchById(String id);
+	void clearMessageQueue();
+	void hit2();
 }

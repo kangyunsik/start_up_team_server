@@ -10,6 +10,7 @@ public class WatchModel {
 	private double quit_longitude;
 	private String busstation;
 	private String laststation;
+	private String vehicleno;
 	
 	
 	public String getId() {
@@ -53,6 +54,12 @@ public class WatchModel {
 	}
 	public void setLaststation(String laststation) {
 		this.laststation = laststation;
+	}
+	public String getVehicleno() {
+		return vehicleno;
+	}
+	public void setVehicleno(String vehicleno) {
+		this.vehicleno = vehicleno;
 	}
 	
 }

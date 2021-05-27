@@ -8,7 +8,7 @@
 		INSERT INTO watchTable (id,routeno,registered_time,quit_latitude,quit_longitude)
 		VALUES(#{_id},#{_busnum},null,${_latitude},${_longitude})
 		ON DUPLICATE KEY
-			UPDATE quit_latitude = ${_latitude}, quit_longitude = ${_longitude} routeno = #{_busnum};
+			UPDATE quit_latitude = ${_latitude}, quit_longitude = ${_longitude}, routeno = #{_busnum};
 	</insert>
 
 	<select id="getLocationByName" resultType="com.example.demo.model.FacilityModel">
@@ -49,21 +49,29 @@
 	</insert>
 	
 	<select id="findActUser" resultType="com.example.demo.model.UserModel">
-		SELECT 	latitude, longitude
+		SELECT 	id, latitude, longitude
 		FROM	user
 		WHERE	user.id in (	select 	distinct(watchTable.id)
 								from 	watchTable)
 	</select>
 	
 	<select id="getRealDist" resultType="com.example.demo.model.RealBusModel">
-		SELECT	*
-		FROM	bus_location
+		SELECT	routeno,vehicleno,latitude,longitude
+		FROM	bus_location natural join watchTable
+		WHERE	id = #{_id}
+		
 	</select>
 	
 	<update id="hit">
 		UPDATE bus_location
-		SET hit = hit+1
+		SET hit = hit+2
 		WHERE bus_location.vehicleno = #{_vehicleno}
+	</update>
+	
+	<update id="hit2">
+		UPDATE bus_location
+		SET hit = hit-1
+		WHERE hit > 0
 	</update>
 	
 	<select id="getOverHitUser" resultType="com.example.demo.model.UserModel">
@@ -71,7 +79,7 @@
 		FROM	user
 		WHERE	user.id in (SELECT 	id
 							FROM	bus_location bl, watchTable wt
-							WHERE	bl.routeno = wt.routeno and bl.hit >= 30)
+							WHERE	bl.routeno = wt.routeno and bl.hit >= 60)
 	</select>
 	
 	<delete id="deleteByToken">
@@ -94,6 +102,11 @@
 		FROM	watchTable;
 	</delete>
 	
+	<delete id="clearMessageQueue">
+		DELETE
+		FROM	messageQueue
+	</delete>
+	
 	<update id ="setStations">
 		UPDATE	watchTable
 		SET		busstation = #{_busstation},
@@ -102,8 +115,7 @@
 	</update>
 	
 	<select id="getWatchById" resultType="com.example.demo.model.WatchModel">
-		SELECT	busstation,laststation
-		FROM	watchTable
-		WHERE	id = #{_id}
+		SELECT	quit_latitude,quit_longitude,busstation,laststation,vehicleno	
+		 from watchTable natural join bus_location where id = #{_id} order by hit desc;
 	</select>
 </mapper>

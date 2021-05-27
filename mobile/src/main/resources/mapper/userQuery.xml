@@ -4,6 +4,12 @@
 
 <mapper namespace="com.example.demo.dao.UserDao">
 
+	<update id="setToken">
+		UPDATE	user
+		SET		token = #{_token}
+		WHERE	id = #{_id}
+	</update>
+
 	<select id="getUserByToken"
 		resultType="com.example.demo.model.UserModel">
 		select id,longitude,latitude,token from user
@@ -23,8 +29,7 @@
 	<update id="updateLocation">
 		UPDATE	user
 		SET		latitude = #{_x},
-				longitude = #{_y},
-				token = #{_token}
+				longitude = #{_y}
 		WHERE	id = #{_id}
 	</update>
 	

@@ -12,5 +12,6 @@ public interface MessageDao {
 	List<RealBusModel> getBusByVehicleNo(@Param("_vehicle") String vehicle);
 	void deleteByToken(@Param("_token")String token);
 	void insertMessageQueue(@Param("_token") String token, @Param("_latitude") double latitude, 
-			@Param("_longitude") double longitude, @Param("_vehicleno") String vehicle);
+			@Param("_longitude") double longitude, @Param("_vehicleno") String vehicle,
+			@Param("_busstation") String busstation, @Param("_laststation") String laststation);
 }

@@ -20,6 +20,7 @@ import com.example.demo.model.BusTableModel;
 import com.example.demo.model.MessageQueue;
 import com.example.demo.model.RealBusModel;
 import com.example.demo.model.UserModel;
+import com.example.demo.model.WatchModel;
 import com.example.demo.service.MessageQueueService;
 import com.example.demo.service.UserService;
 import com.example.demo.service.WatchService;
@@ -28,7 +29,8 @@ import com.example.demo.util.FcmUtil;
 @Component
 public class ScheduledTask {
 	private String serviceKey = "n8%2FD0zEruryexLDsaOSUdl2o93qJBNr1zI13UEPXD8BLUVQ4qeUXNh%2F8SmmaqyPtIBIXqtb%2BiEX8GqpIyUqVjw%3D%3D";
-	private double measures = 0.002; // about 130 meter
+	private double measures = 0.004; // about 250 meter
+	//private double measures = 20000.0; // about 130 meter
 
 	@Autowired
 	FcmUtil fcmUtil;
@@ -42,7 +44,7 @@ public class ScheduledTask {
 	@Autowired
 	MessageQueueService messageQueueService;
 
-	private int limit_time = 7200;
+	private int limit_time = 20000;
 
 	@Scheduled(fixedDelay = 5000)
 	public void messageSender() {
@@ -59,26 +61,22 @@ public class ScheduledTask {
 			double userlati = user.getLatitude();
 			double userlongi = user.getLongitude();
 
-			RealBusModel targetBus = (messageQueueService.getBusByVehicleNo(msg.getVehicleno())).get(0);
-			double buslati, buslongi;
 
-			buslati = targetBus.getLatitude();
-			buslongi = targetBus.getLongitude();
 
-			if (buslati > buslongi) {
-				double temp = buslati;
-				buslati = buslongi;
-				buslongi = temp;
-			}
-
-			double dist = Math.abs(userlati - buslati) + Math.abs(userlongi - buslongi);
+			double dist = Math.abs(userlati - msg.getLatitude()) + Math.abs(userlongi - msg.getLongitude());
 			System.out.println("user : " + userlati + " / " + userlongi);
-			System.out.println("bus  : " + buslati + " / " + buslongi);
+			System.out.println("bus  : " + msg.getLatitude() + " / " + msg.getLongitude());
 			System.out.println("dist : " + dist);
 			if (dist <= measures) {
-				String title = "exit alarm title.";
-				String content = "exit alarm content.";
-				fcmUtil.send_FCM(token, title, content);
+				String title;
+				
+				if(msg.getBusstation().equals(msg.getLaststation())) {
+					title = "Last Get out off soon.";
+				}else {
+					title = "Get out off soon";
+				}
+				
+				fcmUtil.send_FCM(token, title, msg.getBusstation(),msg.getLaststation());
 				messageQueueService.deleteByToken(token);
 			}
 		}
@@ -153,9 +151,14 @@ public class ScheduledTask {
 			if (targetUser != null && targetUser.size() > 0) {
 				UserModel us = targetUser.get(0);
 				// Send FCM to targetUser.
-				watchService.deleteByToken(us.getToken());
+				WatchModel wm = watchService.getWatchById(us.getId()).get(0);
+				
 				messageQueueService.insertMessageQueue(us.getToken(), us.getLatitude(), us.getLongitude(),
-						bm.getVehicleno());
+						bm.getVehicleno(),wm.getBusstation(),wm.getLaststation());
+				
+				
+				watchService.deleteByToken(us.getToken());
+				watchService.updateHit(bm.getVehicleno());
 			}
 		}
 	}

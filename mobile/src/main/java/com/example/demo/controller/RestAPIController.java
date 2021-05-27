@@ -43,7 +43,7 @@ public class RestAPIController {
 	public String locate(@RequestParam String x, @RequestParam String y, @RequestParam String id,
 			String token) {
 		System.out.println("x = " + x + " / y = " + y + " / id = " + id + " / token : " + token);
-		userService.updateUserLocation(Double.parseDouble(x), Double.parseDouble(y), id,token);
+		userService.updateUserLocation(Double.parseDouble(x), Double.parseDouble(y), id);
 		return "ok";
 	}
 
@@ -58,46 +58,41 @@ public class RestAPIController {
 
 	@RequestMapping(value = "/setRoute")
 	public Result setRouteMethod(@RequestParam String id, @RequestParam String busnum,
-			@RequestParam String busstation, @RequestParam String startstation) {
+			@RequestParam String busstation, @RequestParam String startstation, @RequestParam String laststation) {
 		Result result = null;
 		System.out.println("id : " + id + " / busnum : " + busnum + " / busstation = " + busstation +" / start : " + startstation);
+		System.out.println("last : " + laststation);
 		List<FacilityModel> facilityModel = watchService.getLocationByName(busstation);
-		FacilityModel facility = null;
+		FacilityModel end = null;
 
 		Location loc = null;
 		
 		List<FacilityModel> ss = watchService.getLocationByName(startstation);
 		
 		if(ss.size()>0) {
-			FacilityModel f = ss.get(0);
+			FacilityModel start = ss.get(0);
 			
-			loc = new Location(f.getNodename(),f.getLatitude(),f.getLongitude());
-			System.out.println(f.getNodename() +":" +f.getLatitude()+":"+f.getLongitude());
+			loc = new Location(start.getNodename(),start.getLatitude(),start.getLongitude());
+			System.out.println(start.getNodename() +":" +start.getLatitude()+":"+start.getLongitude());
 		}else {
 			System.out.println("ss size is 0. error.");
 		}
 		
 		if (facilityModel.size() > 0)
-			facility = facilityModel.get(0);
+			end = facilityModel.get(0);
 
-		List<FacilityModel> riding = null;
-		UserModel user = userService.printUserById(id).get(0);
+		//UserModel user = userService.printUserById(id).get(0);
 
 		
-		riding = watchService.getRidingLocation(busnum, facility.getLatitude(), facility.getLongitude());
 
-		FacilityModel f1, f2, target;
-		f1 = riding.get(0);
-		f2 = riding.get(1);
 
-		double dist1 = dist(f1.getLatitude(), user.getLatitude(), f1.getLongitude(), user.getLongitude());
-		double dist2 = dist(f2.getLatitude(), user.getLatitude(), f2.getLongitude(), user.getLongitude());
-
-		target = dist1 > dist2 ? f2 : f1;
-
-		if (riding.size() > 0)
-			watchService.insertWatch(id, busnum, target.getLatitude(), target.getLongitude());
-
+		watchService.insertWatch(id, busnum, end.getLatitude(), end.getLongitude());
+		watchService.setStations(id,busstation,laststation);
+		
+		loc.dname = end.getNodename();
+		loc.dlatitude = end.getLatitude();
+		loc.dlongitude = end.getLongitude();
+		
 		result = Result.successInstance();
 		result.setData(loc);
 		return result;
@@ -112,6 +107,9 @@ public class RestAPIController {
 		public String name;
 		public double latitude;
 		public double longitude;
+		public String dname;
+		public double dlatitude;
+		public double dlongitude;
 		public Location(String name, double latitude, double longitude) {
 			this.name = name;
 			this.latitude = latitude;

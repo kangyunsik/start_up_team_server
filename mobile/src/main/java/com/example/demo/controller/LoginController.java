@@ -28,12 +28,19 @@ public class LoginController {
 	public Result login2(HttpServletRequest request, Model model, HttpServletResponse response) {
 		String id = request.getParameter("id");
 		String pw = request.getParameter("pw");
+		String token = request.getParameter("token");
 		Result result = Result.successInstance();
 
 		UserModel loginUser = new UserModel(id, pw);
-		String token = null;
-		if (verify(id, pw)) // MANAGER.
+		
+		if (verify(id, pw)) { // MANAGER.
 			result.setData("OK");
+			if(token != null) {
+				userService.setToken(token, id);
+			}else {
+				System.out.println("token is null.");
+			}
+		}
 		else
 			result.setData("FAIL");
 		//response.setHeader("Authorization", token);

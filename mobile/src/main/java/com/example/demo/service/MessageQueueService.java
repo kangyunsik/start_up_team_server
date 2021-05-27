@@ -9,5 +9,6 @@ public interface MessageQueueService {
 	List<MessageQueue> getMessage();
 	List<RealBusModel> getBusByVehicleNo(String vehicle);
 	void deleteByToken(String token);
-	void insertMessageQueue(String token, double latitude, double longitude, String vehicle);
+	void insertMessageQueue(String token, double latitude, double longitude, String vehicle,
+			String busstation, String laststation);
 }

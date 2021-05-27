@@ -8,13 +8,14 @@
 		INSERT INTO watchTable (id,routeno,registered_time,quit_latitude,quit_longitude)
 		VALUES(#{_id},#{_busnum},null,${_latitude},${_longitude})
 		ON DUPLICATE KEY
-			UPDATE quit_latitude = ${_latitude}, quit_longitude = ${_longitude};
+			UPDATE quit_latitude = ${_latitude}, quit_longitude = ${_longitude} routeno = #{_busnum};
 	</insert>
 
 	<select id="getLocationByName" resultType="com.example.demo.model.FacilityModel">
-		SELECT	nodename, latitude, longitude
+		SELECT	nodename, avg(distinct(latitude)) as latitude, avg(distinct(longitude)) as longitude
 		FROM	busStation
-		WHERE	nodename 	LIKE '%${_name}%'
+		WHERE	nodename = #{_name}
+        order by latitude;
 	</select>
 	
 	
@@ -22,7 +23,7 @@
 		SELECT	bs.latitude,bs.longitude
 		FROM	busStation bs, busTable bt
 		WHERE	bs.routeid = bt.routeid and bt.routeno = #{_name}
-		ORDER BY(latitude - ${_latitude}) + (longitude - ${_longitude})
+		ORDER BY abs(latitude - ${_latitude}) + abs(longitude - ${_longitude})
 		LIMIT 2;
 	</select>
 	
@@ -70,20 +71,39 @@
 		FROM	user
 		WHERE	user.id in (SELECT 	id
 							FROM	bus_location bl, watchTable wt
-							WHERE	bl.routeno = wt.routeno and bl.hit >= 60)
+							WHERE	bl.routeno = wt.routeno and bl.hit >= 30)
 	</select>
 	
 	<delete id="deleteByToken">
-		DELETE FROM watchService
+		DELETE FROM watchTable
 		WHERE id in (	SELECT 	id 
 						FROM	user
 						WHERE 	token = #{_token}
 					)
 	</delete>
 	
+	<update id ="updateHit">
+		UPDATE	bus_location
+		SET		hit = 0
+		WHERE	vehicleno = #{_vehicleno}
+	</update>
+	
 	
 	<delete id="clearWatchTable">
 		DELETE
 		FROM	watchTable;
 	</delete>
+	
+	<update id ="setStations">
+		UPDATE	watchTable
+		SET		busstation = #{_busstation},
+				laststation = #{_laststation}
+		WHERE	id = #{_id}
+	</update>
+	
+	<select id="getWatchById" resultType="com.example.demo.model.WatchModel">
+		SELECT	busstation,laststation
+		FROM	watchTable
+		WHERE	id = #{_id}
+	</select>
 </mapper>

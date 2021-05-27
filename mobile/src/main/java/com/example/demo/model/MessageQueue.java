@@ -5,6 +5,9 @@ public class MessageQueue {
 	private double latitude;
 	private double longitude;
 	private String vehicleno;
+	private String busstation;
+	private String laststation;
+	
 	public String getToken() {
 		return token;
 	}
@@ -28,5 +31,17 @@ public class MessageQueue {
 	}
 	public void setVehicleno(String vehicleno) {
 		this.vehicleno = vehicleno;
+	}
+	public String getBusstation() {
+		return busstation;
+	}
+	public void setBusstation(String busstation) {
+		this.busstation = busstation;
+	}
+	public String getLaststation() {
+		return laststation;
+	}
+	public void setLaststation(String laststation) {
+		this.laststation = laststation;
 	}
 }

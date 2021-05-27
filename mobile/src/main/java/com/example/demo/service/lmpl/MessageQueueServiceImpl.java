@@ -39,8 +39,9 @@ public class MessageQueueServiceImpl implements MessageQueueService {
 	}
 
 	@Override
-	public void insertMessageQueue(String token, double latitude, double longitude, String vehicle) {
-		dao.insertMessageQueue(token, latitude, longitude, vehicle);
+	public void insertMessageQueue(String token, double latitude, double longitude, String vehicle,
+			String busstation,String laststation) {
+		dao.insertMessageQueue(token, latitude, longitude, vehicle,busstation,laststation);
 		return;
 	}
 }

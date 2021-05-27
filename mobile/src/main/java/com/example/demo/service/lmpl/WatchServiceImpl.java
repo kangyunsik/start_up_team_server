@@ -10,6 +10,7 @@ import com.example.demo.model.BusTableModel;
 import com.example.demo.model.FacilityModel;
 import com.example.demo.model.RealBusModel;
 import com.example.demo.model.UserModel;
+import com.example.demo.model.WatchModel;
 import com.example.demo.service.WatchService;
 
 @Service
@@ -80,5 +81,22 @@ public class WatchServiceImpl implements WatchService{
 	public void clearWatchTable() {
 		dao.clearWatchTable();
 		return;
+	}
+	
+	@Override
+	public void updateHit(String vehicleno) {
+		dao.updateHit(vehicleno);
+		return;
+	}
+	
+	@Override
+	public void setStations(String id, String busstation, String laststation) {
+		dao.setStations(id, busstation,laststation);
+		return;
+	}
+	
+	@Override
+	public List<WatchModel> getWatchById(String id){
+		return dao.getWatchById(id);
 	}
 }

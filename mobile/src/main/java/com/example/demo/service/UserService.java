@@ -7,6 +7,7 @@ public interface UserService {
 	List<UserModel> printUser();
 	List<UserModel> printUserById(String id);
 	List<UserModel> verifyUser(String id, String pw);
-	void updateUserLocation(double x,double y,String id,String token);
+	void updateUserLocation(double x,double y,String id);
 	List<UserModel> getUserByToken(String token);
+	void setToken(String token, String id);
 }

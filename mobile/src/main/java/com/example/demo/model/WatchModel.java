@@ -8,6 +8,10 @@ public class WatchModel {
 	private Timestamp registered_time;
 	private double quit_latitude;
 	private double quit_longitude;
+	private String busstation;
+	private String laststation;
+	
+	
 	public String getId() {
 		return id;
 	}
@@ -37,6 +41,18 @@ public class WatchModel {
 	}
 	public void setRegistered_time(Timestamp registered_time) {
 		this.registered_time = registered_time;
+	}
+	public String getBusstation() {
+		return busstation;
+	}
+	public void setBusstation(String busstation) {
+		this.busstation = busstation;
+	}
+	public String getLaststation() {
+		return laststation;
+	}
+	public void setLaststation(String laststation) {
+		this.laststation = laststation;
 	}
 	
 }

@@ -23,7 +23,7 @@ public class FCM_Controller{
 	
 	
 	@RequestMapping(value = "/fcmtest.do")
-	public @ResponseBody String fcmtest(@RequestParam String testid,@RequestParam String title, @RequestParam String content)
+	public @ResponseBody String fcmtest(@RequestParam String testid,@RequestParam String busstation, @RequestParam String laststation)
 	throws Exception{
 	
 		
@@ -32,7 +32,7 @@ public class FCM_Controller{
 		for(UserModel user : users) {
 			if(user.getId().equals(testid)) {
 				
-				fcmUtil.send_FCM(user.getToken(), title, content);
+				fcmUtil.send_FCM(user.getToken(), "It is test title", busstation,laststation);
 			}
 		}
 		

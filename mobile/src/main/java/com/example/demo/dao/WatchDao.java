@@ -9,6 +9,7 @@ import com.example.demo.model.BusTableModel;
 import com.example.demo.model.FacilityModel;
 import com.example.demo.model.RealBusModel;
 import com.example.demo.model.UserModel;
+import com.example.demo.model.WatchModel;
 
 @Mapper
 public interface WatchDao {
@@ -27,4 +28,7 @@ public interface WatchDao {
 	List<UserModel> getOverHitUser();
 	void deleteByToken(@Param("_token") String token);
 	void clearWatchTable();
+	void updateHit(@Param("_vehicleno") String vehicleno);
+	void setStations(@Param("_id")String id,@Param("_busstation") String busstation, @Param("_laststation") String laststation);
+	List<WatchModel> getWatchById(@Param("_id")String id);
 }

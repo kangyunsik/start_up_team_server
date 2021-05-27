@@ -23,8 +23,8 @@
 	</delete>
 	
 	<insert id="insertMessageQueue">
-		INSERT INTO messageQueue(token,latitude,longitude,vehicleno)
-		VALUES(#{_token},${_latitude},${_longitude},#{_vehicleno})
+		INSERT INTO messageQueue(token,latitude,longitude,vehicleno,busstation,laststation)
+		VALUES(#{_token},${_latitude},${_longitude},#{_vehicleno},#{_busstation},#{_laststation})
 		ON DUPLICATE KEY
 			UPDATE token = #{_token} 
 		

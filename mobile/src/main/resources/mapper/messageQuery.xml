@@ -26,15 +26,15 @@
 		INSERT INTO messageQueue(token,latitude,longitude,vehicleno,busstation,laststation)
 		VALUES(#{_token},${_latitude},${_longitude},#{_vehicleno},#{_busstation},#{_laststation})
 		ON DUPLICATE KEY
-			UPDATE latitude = ${_latitude}, longitude = ${_longitude}, vehicleno = #{_vehicleno}, busstation = #{_busstation}, laststation = #{_laststation}
+			UPDATE token = #{_token}
 	</insert>
 	
 	<select id ="getActUser"
 	resultType="com.example.demo.model.UserModel">
-		SELECT	*
+		SELECT	id,latitude,longitude
 		FROM	user
 		WHERE	user.token in (SELECT	token
-								FROM	messageQueue)
+								FROM	watchTable)
 	</select>
 	
 </mapper>

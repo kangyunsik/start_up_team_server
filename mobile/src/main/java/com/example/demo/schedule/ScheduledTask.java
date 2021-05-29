@@ -64,12 +64,13 @@ public class ScheduledTask {
 			double buslati = rb.getLatitude();
 			double buslongi = rb.getLongitude();
 
-			System.out.println("msg lati : " + msg.getLatitude() + "/ longi : " + msg.getLongitude());
+			//System.out.println("msg lati : " + msg.getLatitude() + "/ longi : " + msg.getLongitude());
 
 			double dist = Math.abs(buslati - msg.getLatitude()) + Math.abs(buslongi - msg.getLongitude());
 			System.out.println("bus place: " + buslati + " / " + buslongi);
 			System.out.println("exit place  : " + msg.getLatitude() + " / " + msg.getLongitude());
 			System.out.println("dist : " + dist);
+			System.out.println("msg bus : " + msg.getVehicleno());
 			if (dist <= measures) {
 				String title;
 				
@@ -109,18 +110,19 @@ public class ScheduledTask {
 		List<UserModel> users = watchService.findActUser();
 
 		for (UserModel user : users) {
-			System.out.println("checked2. two");
 			double lati = user.getLatitude();
 			double longi = user.getLongitude();
 			System.out.println("user lati : " + lati + "/ longi : " + longi);
 			List<RealBusModel> realDist = watchService.getRealDist(user.getId());
 			// busTableModel에 routeno, vehicleno, dist 추가.
-			System.out.println("checked2. three");
 
 			RealBusModel bm = realDist.get(0);
 			double bmdist, btmdist;
 
+			//System.out.println("\t\tuserlati : " + lati +"/ longi : " + longi);
 			for (RealBusModel btm : realDist) {
+				//System.out.println("\tbus[btm] vehicleno : " + btm.getVehicleno() +" lat : " + btm.getLatitude() + "long : " + btm.getLongitude()
+				//+"diff lat/lng : " + (Math.abs(btm.getLatitude()-lati) + Math.abs(btm.getLongitude()-longi)));
 
 				bmdist = Math.abs(bm.getLatitude() - lati) + Math.abs(bm.getLongitude() - longi);
 				if (bm.getLatitude() > bm.getLongitude()) {
@@ -147,7 +149,7 @@ public class ScheduledTask {
 				System.out.println(
 						"man dist : " + Math.abs(bm.getLatitude() - longi) + Math.abs(bm.getLongitude() - lati));
 				
-			System.out.println(bm.getVehicleno());
+			System.out.println("selected vehicleno : "+bm.getVehicleno());
 			if (Math.abs(bm.getLatitude() - lati) + Math.abs(bm.getLongitude() - longi) <= measures) {
 				watchService.hit(bm.getVehicleno()); // after, need to modify
 			}

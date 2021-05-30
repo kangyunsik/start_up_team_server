@@ -139,9 +139,9 @@ public class WebDriver {
 						if (stationinfo.get(k).attr("class").contains("ells")) {
 							worb = stationinfo.get(k);
 							String adding = worb.html().replace("[0-9]", "");
-							adding = adding.replaceAll("[a-zA-Z]", "");
+							//adding = adding.replaceAll("[a-zA-Z]", "");
 							adding = adding.replaceAll("[^\uAC00-\uD7A3xfe0-9a-zA-Z\\s]", "");
-
+							//adding = adding.replaceAll("spanclasstxttransspan", "");
 							adding = adding.replaceAll(" ", "");
 							info[num].sname.add(adding);
 							//System.out.println(adding);

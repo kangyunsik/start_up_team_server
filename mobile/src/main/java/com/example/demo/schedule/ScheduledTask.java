@@ -82,6 +82,7 @@ public class ScheduledTask {
 				
 				fcmUtil.send_FCM(token, title, msg.getBusstation(),msg.getLaststation());
 				messageQueueService.deleteByToken(token);
+				watchService.deleteByToken(token);
 			}
 		}
 	}
@@ -108,7 +109,7 @@ public class ScheduledTask {
 	@Scheduled(fixedDelay = 5000)
 	public void runEvery5secs2() {
 		List<UserModel> users = watchService.findActUser();
-
+		boolean flag;
 		for (UserModel user : users) {
 			double lati = user.getLatitude();
 			double longi = user.getLongitude();
@@ -149,9 +150,16 @@ public class ScheduledTask {
 				System.out.println(
 						"man dist : " + Math.abs(bm.getLatitude() - longi) + Math.abs(bm.getLongitude() - lati));
 				
+			flag = true;
 			System.out.println("selected vehicleno : "+bm.getVehicleno());
 			if (Math.abs(bm.getLatitude() - lati) + Math.abs(bm.getLongitude() - longi) <= measures) {
-				watchService.hit(bm.getVehicleno()); // after, need to modify
+				for(MessageQueue mq : messageQueueService.getMessage()) {
+					if(mq.getToken().equals(user.getToken())) {
+						flag = false;
+					}
+				}
+				if(flag)
+					watchService.hit(bm.getVehicleno()); // after, need to modify
 			}
 
 			List<UserModel> targetUser = watchService.getOverHitUser();
@@ -176,7 +184,7 @@ public class ScheduledTask {
 
 		System.out.println("citycode : " + citycode + " / routeno : " + routeno);
 		String url = "http://openapi.tago.go.kr/openapi/service/BusLcInfoInqireService/getRouteAcctoBusLcList?serviceKey="
-				+ serviceKey + "&cityCode=" + citycode + "&routeId=" + routeno;
+				+ serviceKey + "&cityCode=" + citycode + "&routeId=" + routeno+"&numOfRows=1000";
 
 		System.out.println("url : [" + url + "]");
 		DocumentBuilderFactory dbFactoty = DocumentBuilderFactory.newInstance();
@@ -215,6 +223,7 @@ public class ScheduledTask {
 			// System.out.println("vehicleno : " + getTagValue("vehicleno", eElement));
 
 			watchService.insertBusLocation(arg1, arg2, arg3, arg4);
+			//System.out.println("   vehicleno inserted : " + arg1);
 		} // if end
 
 	}

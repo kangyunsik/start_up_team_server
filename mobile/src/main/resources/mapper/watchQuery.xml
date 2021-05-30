@@ -49,7 +49,7 @@
 	</insert>
 	
 	<select id="findActUser" resultType="com.example.demo.model.UserModel">
-		SELECT 	id, latitude, longitude
+		SELECT 	id, latitude, longitude, token
 		FROM	user
 		WHERE	user.id in (	select 	distinct(watchTable.id)
 								from 	watchTable)

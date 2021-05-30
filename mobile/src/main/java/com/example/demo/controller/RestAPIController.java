@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.FacilityModel;
+import com.example.demo.model.MessageQueue;
 import com.example.demo.model.UserModel;
 import com.example.demo.service.MessageQueueService;
 import com.example.demo.service.UserService;
 import com.example.demo.service.WatchService;
+import com.example.demo.util.FcmUtil;
 import com.example.demo.util.Result;
 
 @RestController
@@ -25,6 +27,9 @@ public class RestAPIController {
 	
 	@Autowired
 	MessageQueueService messageQueueService;
+	
+	@Autowired
+	FcmUtil fcmUtil;
 	
 	@RequestMapping("/signin")
 	public String signin(@RequestParam String id, @RequestParam String pw, @RequestParam String email) {
@@ -64,11 +69,17 @@ public class RestAPIController {
 		System.out.println("x = " + x + " / y = " + y + " / id = " + id + " / token : " + token);
 		userService.updateUserLocation(Double.parseDouble(x), Double.parseDouble(y), id);
 		
-		for(UserModel u : messageQueueService.findActUser()) {
-			if(u.getId().equals(id))
-				return "ok";
+		for(MessageQueue msg : messageQueueService.getMessage()) {
+			List<UserModel> uml = userService.getUserByToken(msg.getToken());
+			for(UserModel um : uml) {
+				if(um.getId().equals(id)) {
+					System.out.println("send stop");
+					return "stop";
+				}
+			}
 		}
-		return "stop";
+		
+		return "ok";
 	}
 
 	@RequestMapping(value = "/getRoute")

@@ -32,7 +32,7 @@ public class FCM_Controller{
 		for(UserModel user : users) {
 			if(user.getId().equals(testid)) {
 				
-				fcmUtil.send_FCM(user.getToken(), "It is test title", busstation,laststation);
+				fcmUtil.send_FCM(user.getToken(), "!test.", busstation,laststation);
 			}
 		}
 		

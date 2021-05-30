@@ -46,7 +46,9 @@ public class FcmUtil {
 			// String registrationToken = 안드로이드 토큰 입력;
 			String registrationToken = tokenId;
 
-			Message message = Message.builder()
+			Message message ;
+			
+			message = Message.builder()
 					.putData("title", title)
 					.putData("busstation", busstation)
 					.putData("bus_latlng", get_latlng(busstation))
@@ -54,7 +56,7 @@ public class FcmUtil {
 					.putData("last_latlng", get_latlng(laststation))
 					.putData("id", userService.getUserByToken(tokenId).get(0).getId())
 					.setToken(registrationToken).build();
-
+			
 			String response = FirebaseMessaging.getInstance().send(message);
 
 			// 결과 출력

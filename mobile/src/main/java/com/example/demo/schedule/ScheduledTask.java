@@ -75,9 +75,9 @@ public class ScheduledTask {
 				String title;
 				
 				if(msg.getBusstation().equals(msg.getLaststation())) {
-					title = "Last Get out off soon.";
+					title = "[알림]잠시 후 하차입니다.";
 				}else {
-					title = "Get out off soon";
+					title = "[환승]잠시 후 하차입니다.";
 				}
 				
 				fcmUtil.send_FCM(token, title, msg.getBusstation(),msg.getLaststation());
